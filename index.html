@@ -4,50 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matematik Sınavı Çalışma Rehberi - Logaritma ve Diziler</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="tailwind-runtime.js"></script>
     <script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
                 displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
+                processEscapes: true,
+                processEnvironments: true
             },
             options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            startup: {
+                ready: function() {
+                    console.log('MathJax is ready');
+                    MathJax.startup.defaultReady();
+                }
             }
         };
     </script>
+    <script src="mathjax.js" async></script>
+    <script src="tailwind-runtime.js"></script>
     <style>
+        :root {
+            --bg-primary: #f9fafb;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --solution-bg: linear-gradient(to right, #f0f4ff, #ffffff);
+            --formula-bg: #ffffff;
+            --formula-border: #667eea;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --solution-bg: linear-gradient(to right, #1e293b, #334155);
+            --formula-bg: #0f172a;
+            --formula-border: #667eea;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+
         .card-hover {
+            background-color: var(--bg-card);
             transition: all 0.3s ease;
         }
+
         .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
         }
+
         .solution-step {
-            background: linear-gradient(to right, #f0f4ff, #ffffff);
-            border-left: 4px solid #667eea;
+            background: var(--solution-bg);
+            border-left: 4px solid var(--gradient-start);
         }
+
         .answer-box {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             font-weight: bold;
         }
+
         .topic-badge {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
+
         .difficulty-easy { background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%); }
         .difficulty-medium { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
         .difficulty-hard { background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); }
+
+        .bg-white {
+            background-color: var(--bg-secondary) !important;
+        }
+
+        .text-gray-800 {
+            color: var(--text-primary) !important;
+        }
+
+        .text-gray-700 {
+            color: var(--text-secondary) !important;
+        }
+
+        .text-gray-600 {
+            color: var(--text-secondary) !important;
+        }
+
+        .border-purple-200 {
+            border-color: var(--border-color) !important;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="dark"] .bg-blue-50 {
+            background-color: #1e3a5f !important;
+        }
+
+        [data-theme="dark"] .bg-green-50 {
+            background-color: #1e3a2f !important;
+        }
+
+        [data-theme="dark"] .bg-yellow-50 {
+            background-color: #3a3a1e !important;
+        }
+
+        [data-theme="dark"] .bg-gradient-to-r {
+            background: linear-gradient(to right, #1e293b, #334155) !important;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .theme-toggle {
+                bottom: 1rem;
+                right: 1rem;
+                width: 3rem;
+                height: 3rem;
+                font-size: 1.25rem;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .nav-buttons button {
+                font-size: 0.875rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .problem-card {
+                margin-bottom: 1rem;
+            }
+
+            .formula-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .tips-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-title {
+                font-size: 1.75rem;
+            }
+
+            .header-subtitle {
+                font-size: 1.125rem;
+            }
+
+            .solution-step {
+                padding: 1rem;
+            }
+
+            .answer-box {
+                padding: 1rem;
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <!-- Header -->
     <header class="gradient-bg text-white shadow-lg">
         <div class="container mx-auto px-4 py-8">
@@ -157,6 +320,11 @@
             <p class="text-sm opacity-90">Her soruyu dikkatlice okuyun ve adım adım çözün.</p>
         </div>
     </footer>
+
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Tema Değiştir">
+        <span id="themeIcon">🌙</span>
+    </button>
 
     <script src="data-part1.js"></script>
     <script src="data-part2.js"></script>

@@ -1,8 +1,50 @@
 // Matematik Sınavı - JavaScript
 let currentFilter = 'all';
 
+// Tema Yönetimi
+function initTheme() {
+    // LocalStorage'dan tema tercihini al
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+    applyTheme(theme);
+}
+
+function applyTheme(theme) {
+    const html = document.documentElement;
+    const icon = document.getElementById('themeIcon');
+    if (theme === 'dark') {
+        html.setAttribute('data-theme', 'dark');
+        if (icon) icon.textContent = '☀️';
+    } else {
+        html.removeAttribute('data-theme');
+        if (icon) icon.textContent = '🌙';
+    }
+}
+
+function setTheme(theme) {
+    localStorage.setItem('theme', theme);
+    applyTheme(theme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+}
+
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', function() {
+    // Temayı başlat
+    initTheme();
+    
+    // Tema toggle butonuna event listener ekle
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Soruları göster
     displayProblems(allProblems);
     
     // MathJax'i yeniden render et
